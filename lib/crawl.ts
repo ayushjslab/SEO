@@ -2,8 +2,8 @@ import { parseStringPromise } from "xml2js";
 import * as cheerio from "cheerio";
 
 interface IUrls {
-  loc: [""],
-  lastmod: [""]
+  loc: [""];
+  lastmod: [""];
 }
 export async function getUrlsFromSitemap(sitemapUrl: string) {
   const res = await fetch(sitemapUrl, {
@@ -25,7 +25,6 @@ export async function getUrlsFromSitemap(sitemapUrl: string) {
   return urls;
 }
 
-
 export async function crawlPage(url: string) {
   try {
     const res = await fetch(url, {
@@ -40,7 +39,11 @@ export async function crawlPage(url: string) {
     const html = await res.text();
     const $ = cheerio.load(html);
 
-    $("script, style, nav, footer, header").remove();
+    $(
+      "script, style, nav, footer, header, aside, iframe, svg, canvas, noscript"
+    ).remove();
+
+    $(".toc, .table-of-contents, .on-this-page").remove();
 
     const text = $("body").text().replace(/\s+/g, " ").trim();
 
