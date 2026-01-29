@@ -1,65 +1,66 @@
 'use client'
-
 import React, { useState } from 'react';
-import { LayoutGrid, Settings, Users, LogOut } from 'lucide-react';
+import { LayoutGrid, Settings, Users, ArrowRightToLine } from 'lucide-react';
 
-type TabId = 'Apps' | 'Settings' | 'Users';
+type Tab = 'Apps' | 'Settings' | 'Users';
 
 const SegmentedControl = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('Settings');
+  const [activeTab, setActiveTab] = useState<Tab>('Users');
 
   const tabs = [
-    { id: 'Apps' as TabId, icon: <LayoutGrid size={18} />, label: 'Apps' },
-    { id: 'Settings' as TabId, icon: <Settings size={18} />, label: 'Settings' },
-    { id: 'Users' as TabId, icon: <Users size={18} />, label: 'Users' },
+    { id: 'Apps', icon: <LayoutGrid size={18} />, label: 'Apps' },
+    { id: 'Settings', icon: <Settings size={18} />, label: 'Settings' },
+    { id: 'Users', icon: <Users size={18} />, label: 'Users' },
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black p-4">
-      {/* Outer Container */}
-      <div className="relative flex items-center bg-[#151515] border border-white/10 rounded-2xl p-1 overflow-hidden h-[60px]">
-        
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#050505] p-4">
+      <div className="relative flex items-center bg-[#111111] border border-white/10 rounded-2xl p-1 h-14 w-full max-w-md">
         {tabs.map((tab, index) => {
           const isActive = activeTab === tab.id;
 
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`
-                relative flex items-center justify-center gap-2 px-10 h-full transition-colors duration-300 z-10
-                ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'}
-              `}
+              onClick={() => setActiveTab(tab.id as Tab)}
+              className={`relative flex-1 flex items-center justify-center gap-2 h-full z-10 transition-colors duration-200 ${
+                isActive ? 'text-white' : 'text-gray-500 hover:text-gray-300'
+              }`}
             >
-              {/* The Blue Border Highlight (Only shows when active) */}
+              {/* Active Border SVG - Hand-drawn path for precision */}
               {isActive && (
-                <div className="absolute inset-0 z-[-1] scale-x-110">
-                  {/* Top Border */}
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#3498db] shadow-[0_0_8px_#3498db]" />
-                  {/* Bottom Border */}
-                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#3498db] shadow-[0_0_8px_#3498db]" />
-                  {/* The Background Parallelogram */}
-                  <div 
-                    className="absolute inset-0 bg-white/5"
-                    style={{
-                      transform: 'skewX(-15deg)',
-                      borderLeft: '2px solid #3498db',
-                      borderRight: '2px solid #3498db',
-                    }}
+                <svg
+                  className="absolute inset-0 w-full h-full overflow-visible pointer-events-none"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d={
+                      index === 0 
+                        ? "M 0,10 L 92,10 L 100,90 L 0,90 Z" // Left Tab
+                        : index === 1
+                        ? "M 8,10 L 92,10 L 100,90 L 0,90 Z" // Middle Tab
+                        : "M 8,10 L 100,10 L 100,90 L 0,90 Z" // Right Tab
+                    }
+                    fill="rgba(52, 152, 219, 0.1)"
+                    stroke="#3498db"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                    className="drop-shadow-[0_0_5px_rgba(52,152,219,0.5)]"
                   />
-                </div>
+                </svg>
               )}
 
-              {/* Tab Content */}
-              <span className="flex items-center gap-2 text-lg font-medium tracking-wide">
+              {/* Label & Icon */}
+              <span className="flex items-center gap-2 text-sm font-semibold">
                 {tab.icon}
                 {tab.label}
               </span>
 
-              {/* Dividers (Slanted) */}
-              {index < tabs.length - 1 && (
+              {/* Static Slanted Dividers */}
+              {index < tabs.length - 1 && !isActive && activeTab !== tabs[index+1].id && (
                 <div 
-                  className="absolute -right-[1px] top-[20%] h-[60%] w-[1px] bg-white/20"
+                  className="absolute right-0 w-[1px] h-1/2 bg-white/10"
                   style={{ transform: 'skewX(-15deg)' }}
                 />
               )}
@@ -68,10 +69,10 @@ const SegmentedControl = () => {
         })}
       </div>
 
-      {/* Logout/Arrow Icon Button at bottom */}
-      <button className="mt-10 p-3 bg-[#151515] border border-white/10 rounded-xl text-white hover:bg-[#202020] transition-colors">
-        <LogOut size={22} className="rotate-180" />
-      </button>
+      {/* Footer Button */}
+      <div className="mt-8 flex items-center justify-center w-10 h-10 rounded-lg bg-[#111111] border border-white/10 text-white">
+        <ArrowRightToLine size={20} />
+      </div>
     </div>
   );
 };
